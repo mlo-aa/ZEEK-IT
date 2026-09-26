@@ -7,6 +7,7 @@ import RankingScreen from './components/RankingScreen'
 import VictoryScreen from './components/VictoryScreen'
 import WelcomeScreen from './components/WelcomeScreen'
 import { useMemoryGame } from './hooks/useMemoryGame'
+import { useFullscreen } from './hooks/useFullscreen'
 import { useSound } from './hooks/useSound'
 import { useStoredState } from './hooks/useStoredState'
 import { MODES, RESULT_DELAY_MS } from './lib/constants'
@@ -22,6 +23,7 @@ const initialScreen = () => (window.location.hash === '#ranking' ? 'ranking' : '
 
 export default function App() {
   const sound = useSound()
+  const fullscreen = useFullscreen()
   const game = useMemoryGame(sound.play)
   const [name, setName] = useStoredState('zeek-it:name', '', isString)
   const [mode, setMode] = useStoredState('zeek-it:mode', 'normal', isMode)
@@ -91,7 +93,7 @@ export default function App() {
       }`}
     >
       <Decorations />
-      <Header muted={sound.muted} onToggleMute={sound.toggleMuted} />
+      <Header muted={sound.muted} onToggleMute={sound.toggleMuted} fullscreen={fullscreen} />
 
       {screen === 'welcome' && (
         <WelcomeScreen
