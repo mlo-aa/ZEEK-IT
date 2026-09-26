@@ -77,14 +77,13 @@ y la pantalla lo indica.
 ## Reclamar el premio
 
 Al terminar cada partida (gane o pierda) hay un botón **Ver QR del premio** que
-abre un QR grande: es la insignia del stand de ZEEK en Lyfter Connect 2026 y se
-escanea con la app del evento. Si juegan en su propio celular, escanean el QR
-impreso en el stand.
+abre un QR grande y un botón *Abrir link*: en el iPad del stand lo escanean con
+su celular; si juegan en su propio celular, tocan el link.
 
-El contenido del QR está en `PRIZE_QR` (`src/lib/constants.js`). Puede ser un
-código o un link `https://…` (en ese caso aparece también "Abrir link"). Para
-cambiarlo sin tocar código: en Vercel → Settings → Environment Variables crear
-`VITE_PRIZE_QR` y hacer *Redeploy*.
+El link está en `PRIZE_URL` (`src/lib/constants.js`), hoy el Instagram de
+[@zeek_cr](https://www.instagram.com/zeek_cr). Para cambiarlo sin tocar código:
+en Vercel → Settings → Environment Variables crear `VITE_PRIZE_URL` con el
+nuevo link y hacer *Redeploy*.
 
 ## Personalizar
 

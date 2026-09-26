@@ -51,14 +51,7 @@ export const MODES = {
 
 export const MODE_IDS = Object.keys(MODES)
 
+// Link del premio: se muestra como QR al terminar cada partida (gane o pierda).
+// Se puede cambiar sin tocar código con la variable VITE_PRIZE_URL en Vercel.
 export const INSTAGRAM_URL = 'https://www.instagram.com/zeek_cr'
-
-// Contenido del QR del premio que se muestra al terminar cada partida (gane o
-// pierda). Es el código de la insignia del stand de ZEEK en Lyfter Connect 2026,
-// que se escanea con la app del evento. Puede ser también un link (https://…):
-// en ese caso aparece además el botón "Abrir link".
-// Se puede cambiar sin tocar código con la variable VITE_PRIZE_QR en Vercel.
-export const PRIZE_QR =
-  import.meta.env?.VITE_PRIZE_QR ||
-  'lyfter-badge:v1:a3a15534-d3ea-4cf2-8cd9-df2e31c9afad:Hiic6RFMyQuaw1TWrsQG9tKgxXt3rbd6ct7S_u4jfBA'
-
+export const PRIZE_URL = import.meta.env?.VITE_PRIZE_URL || INSTAGRAM_URL

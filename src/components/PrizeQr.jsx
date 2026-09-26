@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import QRCode from 'qrcode'
-import { PRIZE_QR } from '../lib/constants'
+import { PRIZE_URL } from '../lib/constants'
 
 function GiftIcon({ className }) {
   return (
@@ -12,7 +12,6 @@ function GiftIcon({ className }) {
   )
 }
 
-const isLink = /^https?:\/\//i.test(PRIZE_QR)
 const prettyUrl = (url) => url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')
 
 // Botón "Ver QR del premio" + ventana con el QR grande y el link.
@@ -22,7 +21,7 @@ export default function PrizeQr({ className = '' }) {
   const closeRef = useRef(null)
 
   useEffect(() => {
-    QRCode.toString(PRIZE_QR, { type: 'svg', margin: 1, errorCorrectionLevel: 'M', color: { dark: '#000000', light: '#ffffff' } })
+    QRCode.toString(PRIZE_URL, { type: 'svg', margin: 1, errorCorrectionLevel: 'M', color: { dark: '#000000', light: '#ffffff' } })
       .then(setSvg)
       .catch(() => setSvg(''))
   }, [])
@@ -62,21 +61,12 @@ export default function PrizeQr({ className = '' }) {
             <h2 id="prize-qr-title" className="font-display text-3xl text-neon">
               Tu premio
             </h2>
-            <p className="text-sm leading-relaxed text-white/85">
-              {isLink ? (
-                'Escaneá este código con tu celular para reclamar tu premio.'
-              ) : (
-                <>
-                  Escaneá este código con la app de <strong className="text-white">Lyfter Connect</strong> para ganar tu
-                  insignia de ZEEK.
-                </>
-              )}
-            </p>
+            <p className="text-sm leading-relaxed text-white/85">Escaneá este código con tu celular para reclamar tu premio.</p>
             {svg ? (
               <div
                 role="img"
-                aria-label={isLink ? `Código QR que abre ${PRIZE_QR}` : 'Código QR de la insignia de ZEEK en Lyfter Connect'}
-                className="w-full max-w-[18rem] rounded-2xl bg-white p-3 md:max-w-[22rem] [&>svg]:h-auto [&>svg]:w-full"
+                aria-label={`Código QR que abre ${PRIZE_URL}`}
+                className="w-full max-w-[18rem] rounded-2xl bg-white p-3 [&>svg]:h-auto [&>svg]:w-full"
                 dangerouslySetInnerHTML={{ __html: svg }}
               />
             ) : (
@@ -84,26 +74,18 @@ export default function PrizeQr({ className = '' }) {
                 Generando QR…
               </div>
             )}
-            {isLink ? (
-              <>
-              <a
-                href={PRIZE_QR}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-display flex w-full items-center justify-center gap-2 rounded-full bg-neon px-5 py-3.5 text-base tracking-wide text-ink transition active:scale-95"
-              >
-                Abrir link
-                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M7 17L17 7M9 7h8v8" />
-                </svg>
-              </a>
-              <p className="-mt-1 text-xs break-all text-white/50">{prettyUrl(PRIZE_QR)}</p>
-              </>
-            ) : (
-              <p className="text-xs leading-relaxed text-white/60">
-                ¿Jugaste en tu propio celular? Escaneá el QR impreso en el stand de ZEEK.
-              </p>
-            )}
+            <a
+              href={PRIZE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-display flex w-full items-center justify-center gap-2 rounded-full bg-neon px-5 py-3.5 text-base tracking-wide text-ink transition active:scale-95"
+            >
+              Abrir link
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M7 17L17 7M9 7h8v8" />
+              </svg>
+            </a>
+            <p className="-mt-1 text-xs break-all text-white/50">{prettyUrl(PRIZE_URL)}</p>
             <button
               ref={closeRef}
               type="button"
