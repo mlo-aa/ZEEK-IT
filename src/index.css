@@ -77,8 +77,13 @@
   );
   max-width: 520px;
 }
+.board[data-layout='4x4'] {
+  --cols: 4;
+  --rows: 4;
+  --gap: clamp(6px, 1.8cqmin, 12px);
+}
 @media (orientation: landscape) and (min-width: 640px) {
-  .board {
+  .board[data-layout='3x4'] {
     --cols: 4;
     --rows: 3;
     max-width: 640px;
@@ -152,6 +157,57 @@
 @keyframes burst {
   0% { opacity: 1; transform: translateY(0) scaleY(0.4); }
   100% { opacity: 0; transform: translateY(-58cqmin) scaleY(1); }
+}
+
+/* ---------- Modo extremo: glitch y penalización ---------- */
+.card.is-glitch .card-inner {
+  animation: glitch 700ms steps(2, jump-none) both;
+}
+@keyframes glitch {
+  0% { translate: 0 0; filter: none; }
+  15% { translate: -5px 2px; filter: drop-shadow(4px 0 0 #01e576) drop-shadow(-4px 0 0 #6335ed); }
+  30% { translate: 6px -3px; filter: drop-shadow(-5px 0 0 #01e576) drop-shadow(5px 0 0 #fff); opacity: 0.5; }
+  45% { translate: -3px 0; filter: hue-rotate(90deg) drop-shadow(3px 0 0 #6335ed); opacity: 1; }
+  60% { translate: 4px 3px; filter: drop-shadow(-3px 0 0 #01e576); }
+  80% { translate: -2px -1px; filter: none; opacity: 0.7; }
+  100% { translate: 0 0; filter: none; opacity: 1; }
+}
+
+.glitch-banner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  padding: 0.35em 0.9em;
+  font-size: clamp(1.6rem, 9cqmin, 2.6rem);
+  color: #000;
+  background: var(--color-neon);
+  box-shadow: 5px 5px 0 var(--color-zeek), -5px -5px 0 #fff;
+  pointer-events: none;
+  animation: glitch-banner 700ms steps(3, jump-none) both;
+}
+@keyframes glitch-banner {
+  0% { opacity: 0; transform: skewX(-20deg) scale(1.4); }
+  20% { opacity: 1; transform: skewX(12deg) scale(1); }
+  40% { transform: skewX(-6deg) translateX(6px); }
+  70% { opacity: 1; transform: none; }
+  100% { opacity: 0; transform: scale(0.9); }
+}
+
+.penalty-float {
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  color: #ff4d6d;
+  font-size: 1.4rem;
+  pointer-events: none;
+  text-shadow: 0 2px 0 #000;
+  animation: penalty-float 900ms ease-out both;
+}
+@keyframes penalty-float {
+  0% { opacity: 0; transform: translate(-50%, -6px) scale(0.6); }
+  20% { opacity: 1; transform: translate(-50%, 2px) scale(1.2); }
+  100% { opacity: 0; transform: translate(-50%, 26px) scale(1); }
 }
 
 /* ---------- Animaciones generales ---------- */

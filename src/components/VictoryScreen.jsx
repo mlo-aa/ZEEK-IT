@@ -1,5 +1,6 @@
 import Button from './Button'
 import Confetti from './Confetti'
+import ScorePanel from './ScorePanel'
 import Trophy from './Trophy'
 
 const INSTAGRAM_URL = 'https://www.instagram.com/zeek_cr'
@@ -13,7 +14,7 @@ function Stat({ label, value }) {
   )
 }
 
-export default function VictoryScreen({ remainingMs, attempts, onPlayAgain }) {
+export default function VictoryScreen({ remainingMs, attempts, score, submission, onShowRanking, onPlayAgain, onHome }) {
   const secondsLeft = (remainingMs / 1000).toLocaleString('es-AR', {
     minimumFractionDigits: 1,
     maximumFractionDigits: 1,
@@ -36,6 +37,10 @@ export default function VictoryScreen({ remainingMs, attempts, onPlayAgain }) {
       <div className="animate-fade-up flex w-full max-w-sm gap-3 [animation-delay:380ms]">
         <Stat label="Tiempo restante" value={`${secondsLeft} s`} />
         <Stat label="Intentos" value={attempts} />
+      </div>
+
+      <div className="animate-fade-up w-full max-w-sm [animation-delay:430ms]">
+        <ScorePanel score={score} submission={submission} onShowRanking={onShowRanking} />
       </div>
 
       <div className="animate-fade-up w-full max-w-sm rounded-2xl bg-neon p-4 text-left text-ink [animation-delay:480ms]">
@@ -67,6 +72,9 @@ export default function VictoryScreen({ remainingMs, attempts, onPlayAgain }) {
         <Button variant="purple" onClick={onPlayAgain}>
           Jugar de nuevo
         </Button>
+        <button type="button" onClick={onHome} className="mt-3 text-sm font-bold text-white/70 underline underline-offset-4">
+          Cambiar jugador o modo
+        </button>
       </div>
     </main>
   )

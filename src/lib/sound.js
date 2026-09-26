@@ -37,6 +37,10 @@ const SOUNDS = {
     { freq: 990, start: 0.08, duration: 0.14 },
   ],
   miss: [{ freq: 220, slideTo: 140, duration: 0.2, type: 'sawtooth', volume: 0.05 }],
+  glitch: [
+    { freq: 90, slideTo: 1400, duration: 0.12, type: 'sawtooth', volume: 0.05 },
+    { freq: 1400, slideTo: 70, start: 0.12, duration: 0.14, type: 'square', volume: 0.05 },
+  ],
   tick: [{ freq: 1200, duration: 0.04, type: 'sine', volume: 0.06 }],
   win: [523, 659, 784, 1047].map((freq, i) => ({ freq, start: i * 0.1, duration: 0.18 })),
   lose: [392, 330, 262].map((freq, i) => ({

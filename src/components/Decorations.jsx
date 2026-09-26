@@ -23,7 +23,7 @@ export default function Decorations() {
       <div className="absolute -right-24 -bottom-24 h-72 w-72 rounded-full bg-neon/15 blur-3xl" />
       <Sparkle className="animate-float absolute top-[42%] left-[2%] h-7 w-7 opacity-80" color="#6335ED" />
       <Sparkle className="animate-float absolute right-[8%] bottom-[22%] h-6 w-6 opacity-70 [animation-delay:1.2s]" color="#01E576" />
-      <Dashes className="animate-float absolute top-[9%] right-[24%] h-10 w-10 [--rot:20deg] [animation-delay:0.6s]" color="#01E576" />
+      <Dashes className="animate-float absolute right-[22%] bottom-[3%] h-10 w-10 [--rot:20deg] [animation-delay:0.6s]" color="#01E576" />
       <Dashes className="animate-float absolute bottom-[12%] left-[8%] h-9 w-9 [--rot:-150deg] [animation-delay:2s]" color="#6335ED" />
     </div>
   )
