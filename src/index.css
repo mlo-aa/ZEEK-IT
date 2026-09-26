@@ -225,14 +225,6 @@
   animation: confetti-fall var(--dur) linear var(--delay) infinite;
 }
 
-@keyframes live-dot {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.25; }
-}
-.animate-live {
-  animation: live-dot 1s ease-in-out infinite;
-}
-
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

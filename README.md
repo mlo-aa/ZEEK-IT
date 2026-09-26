@@ -2,8 +2,8 @@
 
 Memorama web de ZEEK para el stand en eventos. La gente escanea un QR, abre el
 juego en el celular y tiene **45 segundos** para encontrar las **6 parejas**
-(IA, Robot, Startup, Laptop, Comunidad, Innovación). Si gana, muestra la pantalla
-de victoria al equipo de ZEEK para recibir el QR de premio (que **no** está en la app).
+(IA, Robot, Startup, Laptop, Comunidad, Innovación). Si gana, sigue a ZEEK en Instagram
+para reclamar el QR de premio (que **no** está en la app).
 
 Sin cuentas, sin backend, sin instalar nada.
 
@@ -46,12 +46,11 @@ O por CLI: `npx vercel --prod`.
   tablero se bloquea. Las incorrectas se ocultan a los 800 ms.
 - Al ganar o perder se detiene el reloj y se cancelan los timeouts pendientes.
 
-## Validar una victoria en el stand
+## Reclamar el premio
 
-La pantalla de victoria muestra un **código aleatorio** (`ZK-XXXX`), la **hora en
-que se ganó** y un **reloj en vivo** que avanza cada segundo. Si el reloj no se
-mueve o la hora no coincide, probablemente sea una captura de pantalla.
-Recargar la página vuelve al inicio, así que la victoria no se puede "guardar".
+La pantalla de victoria invita a seguir a [@zeek_cr en Instagram](https://www.instagram.com/zeek_cr)
+para reclamar el QR de premio. El link abre en una pestaña nueva, así que la
+pantalla de victoria sigue abierta en el juego. Recargar la página vuelve al inicio.
 
 ## Personalizar
 

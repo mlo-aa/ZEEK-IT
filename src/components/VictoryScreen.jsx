@@ -1,15 +1,8 @@
-import { useEffect, useMemo, useState } from 'react'
 import Button from './Button'
 import Confetti from './Confetti'
 import Trophy from './Trophy'
 
-const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
-
-function makeCode() {
-  return Array.from({ length: 4 }, () => CODE_CHARS[Math.floor(Math.random() * CODE_CHARS.length)]).join('')
-}
-
-const formatClock = (d) => d.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' })
+const INSTAGRAM_URL = 'https://www.instagram.com/zeek_cr'
 
 function Stat({ label, value }) {
   return (
@@ -21,16 +14,6 @@ function Stat({ label, value }) {
 }
 
 export default function VictoryScreen({ remainingMs, attempts, onPlayAgain }) {
-  // Código + hora en vivo: ayudan al staff a distinguir una victoria real
-  // de una captura de pantalla vieja.
-  const code = useMemo(makeCode, [])
-  const wonAt = useMemo(() => new Date(), [])
-  const [now, setNow] = useState(() => new Date())
-  useEffect(() => {
-    const id = setInterval(() => setNow(new Date()), 1000)
-    return () => clearInterval(id)
-  }, [])
-
   const secondsLeft = (remainingMs / 1000).toLocaleString('es-AR', {
     minimumFractionDigits: 1,
     maximumFractionDigits: 1,
@@ -46,7 +29,7 @@ export default function VictoryScreen({ remainingMs, attempts, onPlayAgain }) {
           ¡Lo lograste!
         </h1>
         <p className="mx-auto max-w-sm leading-relaxed text-white/85">
-          Encontraste todas las parejas. Mostrá esta pantalla al equipo de ZEEK para escanear tu QR de premio.
+          Encontraste todas las parejas. Seguí a ZEEK en Instagram para reclamar tu QR de premio.
         </p>
       </div>
 
@@ -58,22 +41,26 @@ export default function VictoryScreen({ remainingMs, attempts, onPlayAgain }) {
       <div className="animate-fade-up w-full max-w-sm rounded-2xl bg-neon p-4 text-left text-ink [animation-delay:480ms]">
         <div className="flex items-center gap-3">
           <svg viewBox="0 0 24 24" className="h-9 w-9 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <rect x="3" y="8" width="18" height="4" rx="1" />
-            <path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5" />
+            <rect x="3" y="3" width="18" height="18" rx="5" />
+            <circle cx="12" cy="12" r="4" />
+            <circle cx="17.3" cy="6.7" r="0.6" fill="currentColor" />
           </svg>
           <p className="text-sm leading-snug font-semibold">
-            Mostrá esta pantalla <strong className="font-black">en el stand de ZEEK</strong> para recibir tu QR de premio.
+            Seguí a <strong className="font-black">@zeek_cr</strong> en Instagram para reclamar tu{' '}
+            <strong className="font-black">QR de premio</strong>.
           </p>
         </div>
-        <div className="mt-3 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-t-2 border-ink/15 pt-3 text-xs font-bold">
-          <span className="whitespace-nowrap">
-            Código <span className="font-display ml-1 text-base tracking-widest">ZK-{code}</span>
-          </span>
-          <span className="flex items-center gap-1.5 tabular-nums">
-            <span className="animate-live h-2 w-2 rounded-full bg-zeek" aria-hidden="true" />
-            Ganaste {formatClock(wonAt)} · ahora {formatClock(now)}
-          </span>
-        </div>
+        <a
+          href={INSTAGRAM_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-display mt-3 flex items-center justify-center gap-2 rounded-full bg-ink px-5 py-3.5 text-base tracking-wide text-neon transition active:scale-95"
+        >
+          Seguir a @zeek_cr
+          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M7 17L17 7M9 7h8v8" />
+          </svg>
+        </a>
       </div>
 
       <div className="animate-fade-up w-full max-w-sm [animation-delay:560ms]">
