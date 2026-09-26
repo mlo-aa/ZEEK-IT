@@ -1,4 +1,38 @@
-# ZEEK IT
+# ZEEK ARCADE
+
+Colección de minijuegos de ZEEK para el stand en eventos. La gente escanea un QR
+y juega desde el celular, sin cuentas ni instalación.
+
+| Ruta | Juego |
+| --- | --- |
+| `/` | Menú de ZEEK ARCADE |
+| `/it` | **ZEEK IT**: memorama (ver abajo) |
+| `/rush` | **ZEEK RUSH** 🚀: arcade espacial de 30 segundos |
+| `/#ranking` o `/it#ranking` | Ranking del día de ZEEK IT (pantalla del stand) |
+
+## ZEEK RUSH
+
+Pilotá el cohete, esquivá asteroides y recolectá estrellas. Sobreviví 30 s con
+tus 3 vidas para ganar; cada estrella suma 10 puntos (opcionales).
+
+- **Controles:** deslizar el dedo (o arrastrar con el mouse) en cualquier parte
+  de la pantalla; en computadora también ← → o A / D.
+- **Dificultad:** 0–10 s tranquilo, 10–20 s más rápido y denso, 20–30 s exigente.
+  Tiempos, velocidades y tamaños en `src/rush/config.ts`.
+- **Juego justo:** los asteroides llegan en oleadas que siempre dejan un hueco
+  más ancho que el cohete, y cada hueco se solapa con el siguiente, así que
+  siempre existe un camino. Los tests lo comprueban con un bot con tiempo de
+  reacción humano en cientos de partidas (`src/rush/__tests__/engine.test.ts`).
+- **Vidas:** cada choque resta una y da 1,5 s de invulnerabilidad (el cohete
+  parpadea).
+- **Pausa automática** al cambiar de pestaña o salir de la app; al volver hay
+  una cuenta regresiva 3, 2, 1.
+- **Sonido** apagado por defecto (botón en la pantalla de juego).
+- **Motor:** Canvas 2D propio en TypeScript, sin librerías de juego:
+  `engine.ts` (lógica pura, testeable), `render.ts` (dibujo), `RushGame.tsx`
+  (bucle, controles, HUD).
+
+## ZEEK IT
 
 Memorama web de ZEEK para el stand en eventos. La gente escanea un QR, escribe su
 nombre, elige un modo y juega desde el celular. Al terminar, gane o pierda, puede ver el
@@ -19,7 +53,7 @@ Sin cuentas ni instalación.
 
 ## Stack
 
-- React 19 + Vite
+- React 19 + Vite + TypeScript (ZEEK RUSH y el menú)
 - Tailwind CSS v4
 - Tipografía Archivo auto-alojada (funciona aunque el Wi-Fi del evento sea malo)
 - Sonidos generados con Web Audio (sin archivos), con botón para silenciar
@@ -30,7 +64,8 @@ Sin cuentas ni instalación.
 ```bash
 npm install
 npm run dev      # http://localhost:5173
-npm test         # tests de la lógica del juego
+npm test         # tests de la lógica de los juegos
+npm run typecheck
 npm run build    # genera dist/
 ```
 

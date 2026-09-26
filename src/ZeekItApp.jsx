@@ -21,7 +21,9 @@ const isString = (v) => typeof v === 'string'
 // Abrir /#ranking muestra directo el ranking (ideal para una pantalla del stand).
 const initialScreen = () => (window.location.hash === '#ranking' ? 'ranking' : 'welcome')
 
-export default function App() {
+// ZEEK IT (memorama). Sin cambios de lógica: solo se agregó el botón para
+// volver a ZEEK ARCADE.
+export default function ZeekItApp({ onExit }) {
   const sound = useSound()
   const fullscreen = useFullscreen()
   const game = useMemoryGame(sound.play)
@@ -93,7 +95,12 @@ export default function App() {
       }`}
     >
       <Decorations />
-      <Header muted={sound.muted} onToggleMute={sound.toggleMuted} fullscreen={fullscreen} />
+      <Header
+        muted={sound.muted}
+        onToggleMute={sound.toggleMuted}
+        fullscreen={fullscreen}
+        onBack={screen === 'game' ? undefined : onExit}
+      />
 
       {screen === 'welcome' && (
         <WelcomeScreen

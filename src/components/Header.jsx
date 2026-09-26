@@ -26,13 +26,35 @@ function FullscreenIcon({ active }) {
 const ROUND_BUTTON =
   'grid h-11 w-11 place-items-center rounded-full border-2 border-zeek/70 bg-ink/70 text-white transition hover:border-neon hover:text-neon active:scale-90'
 
-export default function Header({ muted, onToggleMute, fullscreen }) {
+/**
+ * @param {{
+ *   muted?: boolean
+ *   onToggleMute?: () => void
+ *   fullscreen?: { supported: boolean, active: boolean, toggle: () => void }
+ *   onBack?: () => void
+ * }} props
+ */
+export default function Header({ muted = false, onToggleMute, fullscreen, onBack }) {
   return (
     <header className="relative z-10 grid grid-cols-[1fr_auto_1fr] items-center">
-      <span aria-hidden="true" />
+      {onBack ? (
+        <button
+          type="button"
+          onClick={onBack}
+          aria-label="Volver a ZEEK ARCADE"
+          title="Volver a ZEEK ARCADE"
+          className={`${ROUND_BUTTON} justify-self-start`}
+        >
+          <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M15 5l-7 7 7 7" />
+          </svg>
+        </button>
+      ) : (
+        <span aria-hidden="true" />
+      )}
       <img src="/zeek-logo.png" alt="ZEEK" className="h-8 w-auto sm:h-9" width="88" height="32" />
       <div className="flex items-center justify-end gap-2">
-      {fullscreen.supported && (
+      {fullscreen?.supported && (
         <button
           type="button"
           onClick={fullscreen.toggle}
@@ -44,6 +66,7 @@ export default function Header({ muted, onToggleMute, fullscreen }) {
           <FullscreenIcon active={fullscreen.active} />
         </button>
       )}
+      {onToggleMute && (
       <button
         type="button"
         onClick={onToggleMute}
@@ -54,6 +77,7 @@ export default function Header({ muted, onToggleMute, fullscreen }) {
       >
         <SpeakerIcon muted={muted} />
       </button>
+      )}
       </div>
     </header>
   )

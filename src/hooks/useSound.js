@@ -1,31 +1,31 @@
 import { useCallback, useState } from 'react'
 import { playSound, unlockAudio } from '../lib/sound'
 
-const STORAGE_KEY = 'zeek-it:muted'
-
-function readMuted() {
+function readMuted(key, defaultMuted) {
   try {
-    return localStorage.getItem(STORAGE_KEY) === '1'
+    const stored = localStorage.getItem(key)
+    return stored === null ? defaultMuted : stored === '1'
   } catch {
-    return false
+    return defaultMuted
   }
 }
 
-export function useSound() {
-  const [muted, setMuted] = useState(readMuted)
+// Cada juego guarda su propia preferencia de sonido.
+export function useSound(storageKey = 'zeek-it:muted', defaultMuted = false) {
+  const [muted, setMuted] = useState(() => readMuted(storageKey, defaultMuted))
 
   const toggleMuted = useCallback(() => {
     setMuted((prev) => {
       const next = !prev
       try {
-        localStorage.setItem(STORAGE_KEY, next ? '1' : '0')
+        localStorage.setItem(storageKey, next ? '1' : '0')
       } catch {
         // Modo privado: la preferencia vale solo para esta sesión.
       }
       if (!next) unlockAudio()
       return next
     })
-  }, [])
+  }, [storageKey])
 
   const play = useCallback((name) => !muted && playSound(name), [muted])
 

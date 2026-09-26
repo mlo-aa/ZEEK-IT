@@ -41,6 +41,17 @@ const SOUNDS = {
     { freq: 90, slideTo: 1400, duration: 0.12, type: 'sawtooth', volume: 0.05 },
     { freq: 1400, slideTo: 70, start: 0.12, duration: 0.14, type: 'square', volume: 0.05 },
   ],
+  // ZEEK RUSH
+  star: [
+    { freq: 880, duration: 0.06, type: 'triangle', volume: 0.09 },
+    { freq: 1320, start: 0.05, duration: 0.1, type: 'triangle', volume: 0.09 },
+  ],
+  hit: [
+    { freq: 180, slideTo: 60, duration: 0.28, type: 'sawtooth', volume: 0.09 },
+    { freq: 90, slideTo: 40, start: 0.02, duration: 0.3, type: 'square', volume: 0.05 },
+  ],
+  beep: [{ freq: 660, duration: 0.12, type: 'square', volume: 0.06 }],
+  go: [{ freq: 990, slideTo: 1480, duration: 0.25, type: 'square', volume: 0.07 }],
   tick: [{ freq: 1200, duration: 0.04, type: 'sine', volume: 0.06 }],
   win: [523, 659, 784, 1047].map((freq, i) => ({ freq, start: i * 0.1, duration: 0.18 })),
   lose: [392, 330, 262].map((freq, i) => ({
