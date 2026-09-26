@@ -28,9 +28,10 @@ const ROUND_BUTTON =
 
 export default function Header({ muted, onToggleMute, fullscreen }) {
   return (
-    <header className="relative z-10 flex items-center justify-between">
+    <header className="relative z-10 grid grid-cols-[1fr_auto_1fr] items-center">
+      <span aria-hidden="true" />
       <img src="/zeek-logo.png" alt="ZEEK" className="h-8 w-auto sm:h-9" width="88" height="32" />
-      <div className="flex items-center gap-2">
+      <div className="flex items-center justify-end gap-2">
       {fullscreen.supported && (
         <button
           type="button"
