@@ -51,7 +51,5 @@ export const MODES = {
 
 export const MODE_IDS = Object.keys(MODES)
 
-// Link del premio: se muestra como QR al terminar cada partida (gane o pierda).
-// Se puede cambiar sin tocar código con la variable VITE_PRIZE_URL en Vercel.
+// Instagram de ZEEK: se muestra como link y como QR al terminar cada partida.
 export const INSTAGRAM_URL = 'https://www.instagram.com/zeek_cr'
-export const PRIZE_URL = import.meta.env?.VITE_PRIZE_URL || INSTAGRAM_URL

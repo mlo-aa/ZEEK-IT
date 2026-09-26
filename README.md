@@ -2,7 +2,7 @@
 
 Memorama web de ZEEK para el stand en eventos. La gente escanea un QR, escribe su
 nombre, elige un modo y juega desde el celular. Al terminar, gane o pierda, puede ver el
-QR del premio.
+QR del Instagram de ZEEK.
 
 | | Normal | 🔥 Extremo |
 | --- | --- | --- |
@@ -74,16 +74,13 @@ y la pantalla lo indica.
   tablero se bloquea. Las incorrectas se ocultan a los 800 ms.
 - Al ganar o perder se detiene el reloj y se cancelan los timeouts pendientes.
 
-## Reclamar el premio
+## Instagram de ZEEK
 
-Al terminar cada partida (gane o pierda) hay un botón **Ver QR del premio** que
-abre un QR grande y un botón *Abrir link*: en el iPad del stand lo escanean con
-su celular; si juegan en su propio celular, tocan el link.
-
-El link está en `PRIZE_URL` (`src/lib/constants.js`), hoy el Instagram de
-[@zeek_cr](https://www.instagram.com/zeek_cr). Para cambiarlo sin tocar código:
-en Vercel → Settings → Environment Variables crear `VITE_PRIZE_URL` con el
-nuevo link y hacer *Redeploy*.
+La pantalla de victoria invita a seguir a [@zeek_cr en Instagram](https://www.instagram.com/zeek_cr)
+para reclamar el premio. Al terminar cada partida (gane o pierda) también hay
+un botón **QR de Instagram** con un QR grande y un botón *Abrir Instagram*: en
+el iPad del stand lo escanean con su celular. El link está en `INSTAGRAM_URL`
+(`src/lib/constants.js`).
 
 ## Personalizar
 
