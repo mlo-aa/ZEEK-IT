@@ -3,7 +3,7 @@ import ScorePanel from './ScorePanel'
 
 export default function DefeatScreen({ matchedPairs, totalPairs, score, submission, onShowRanking, onRetry, onHome }) {
   return (
-    <main className="relative z-10 flex flex-1 flex-col items-center justify-center gap-6 py-4 text-center">
+    <main className="relative z-10 mx-auto flex w-full max-w-xl flex-1 flex-col items-center justify-center gap-6 py-4 text-center">
       <div className="animate-wiggle grid h-32 w-32 place-items-center rounded-full border-4 border-zeek bg-zeek/20" aria-hidden="true">
         <svg viewBox="0 0 64 64" className="h-18 w-18" fill="none" stroke="#01E576" strokeWidth="4.5" strokeLinecap="round">
           <circle cx="32" cy="34" r="22" />

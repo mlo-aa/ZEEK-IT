@@ -15,7 +15,7 @@ export default function GameScreen({ game }) {
   const boardDisabled = !playable || locked
 
   return (
-    <main className="relative z-10 flex min-h-0 flex-1 flex-col gap-3 pt-3">
+    <main className="relative z-10 mx-auto flex min-h-0 w-full max-w-2xl flex-1 flex-col gap-3 pt-3 lg:pb-4">
       <GameHud
         mode={mode}
         secondsLeft={secondsLeft}

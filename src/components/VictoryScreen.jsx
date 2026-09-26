@@ -21,8 +21,9 @@ export default function VictoryScreen({ remainingMs, attempts, score, submission
   })
 
   return (
-    <main className="relative z-10 flex flex-1 flex-col items-center justify-center gap-5 py-2 text-center">
+    <main className="relative z-10 flex flex-1 flex-col items-center justify-center gap-5 py-2 text-center lg:grid lg:grid-cols-2 lg:gap-x-16 lg:py-10">
       <Confetti />
+      <div className="flex flex-col items-center gap-5">
       <Trophy />
 
       <div className="animate-fade-up space-y-3 [animation-delay:250ms]">
@@ -34,16 +35,19 @@ export default function VictoryScreen({ remainingMs, attempts, score, submission
         </p>
       </div>
 
-      <div className="animate-fade-up flex w-full max-w-sm gap-3 [animation-delay:380ms]">
+      </div>
+
+      <div className="flex w-full flex-col items-center gap-5">
+      <div className="animate-fade-up flex w-full max-w-sm gap-3 md:max-w-md [animation-delay:380ms]">
         <Stat label="Tiempo restante" value={`${secondsLeft} s`} />
         <Stat label="Intentos" value={attempts} />
       </div>
 
-      <div className="animate-fade-up w-full max-w-sm [animation-delay:430ms]">
+      <div className="animate-fade-up w-full max-w-sm md:max-w-md [animation-delay:430ms]">
         <ScorePanel score={score} submission={submission} onShowRanking={onShowRanking} />
       </div>
 
-      <div className="animate-fade-up w-full max-w-sm rounded-2xl bg-neon p-4 text-left text-ink [animation-delay:480ms]">
+      <div className="animate-fade-up w-full max-w-sm rounded-2xl bg-neon md:max-w-md p-4 text-left text-ink [animation-delay:480ms]">
         <div className="flex items-center gap-3">
           <svg viewBox="0 0 24 24" className="h-9 w-9 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <rect x="3" y="3" width="18" height="18" rx="5" />
@@ -68,13 +72,14 @@ export default function VictoryScreen({ remainingMs, attempts, score, submission
         </a>
       </div>
 
-      <div className="animate-fade-up w-full max-w-sm [animation-delay:560ms]">
+      <div className="animate-fade-up w-full max-w-sm md:max-w-md [animation-delay:560ms]">
         <Button variant="purple" onClick={onPlayAgain}>
           Jugar de nuevo
         </Button>
         <button type="button" onClick={onHome} className="mt-3 text-sm font-bold text-white/70 underline underline-offset-4">
           Cambiar jugador o modo
         </button>
+      </div>
       </div>
     </main>
   )

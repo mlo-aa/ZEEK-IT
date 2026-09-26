@@ -86,7 +86,7 @@ export default function App() {
 
   return (
     <div
-      className={`safe-screen relative mx-auto flex max-w-xl flex-col ${
+      className={`safe-screen relative mx-auto flex w-full max-w-xl flex-col md:max-w-3xl lg:max-w-6xl lg:px-10 ${
         screen === 'game' ? 'h-dvh overflow-hidden' : 'min-h-dvh overflow-x-hidden'
       }`}
     >

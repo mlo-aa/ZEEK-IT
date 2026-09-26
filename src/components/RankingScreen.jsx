@@ -37,7 +37,7 @@ export default function RankingScreen({ initialMode, playerName, onBack }) {
   const me = playerName.trim().toLocaleLowerCase('es')
 
   return (
-    <main className="relative z-10 flex flex-1 flex-col gap-4 py-4">
+    <main className="relative z-10 mx-auto flex w-full max-w-2xl flex-1 flex-col gap-4 py-4 lg:py-8">
       <div className="text-center">
         <h1 className="font-display text-[clamp(2.2rem,10vw,3.4rem)] text-neon">Ranking del día</h1>
         {data?.day && <p className="mt-1 text-sm text-white/60 first-letter:uppercase">{formatDay(data.day)}</p>}
@@ -101,7 +101,7 @@ export default function RankingScreen({ initialMode, playerName, onBack }) {
         segundo de sobra · −{SCORE_RULES.perMiss} por error. Se guarda tu mejor partida del día.
       </p>
 
-      <div className="mt-auto w-full">
+      <div className="mx-auto mt-auto w-full max-w-md">
         <Button variant="purple" onClick={onBack}>
           Volver
         </Button>

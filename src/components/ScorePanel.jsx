@@ -14,7 +14,7 @@ export default function ScorePanel({ score, submission, onShowRanking }) {
   }
 
   return (
-    <div className="flex w-full max-w-sm items-center justify-between gap-3 rounded-2xl border-2 border-neon/70 bg-ink/70 px-4 py-3 text-left">
+    <div className="flex w-full max-w-sm items-center md:max-w-md justify-between gap-3 rounded-2xl border-2 border-neon/70 bg-ink/70 px-4 py-3 text-left">
       <div>
         <p className="text-[0.7rem] font-bold tracking-widest text-white/70 uppercase">Puntaje</p>
         <p className="font-display text-4xl text-neon tabular-nums">{score}</p>

@@ -77,6 +77,11 @@
   );
   max-width: 520px;
 }
+@media (min-width: 768px) {
+  .board {
+    max-width: 640px;
+  }
+}
 .board[data-layout='4x4'] {
   --cols: 4;
   --rows: 4;
@@ -86,7 +91,7 @@
   .board[data-layout='3x4'] {
     --cols: 4;
     --rows: 3;
-    max-width: 640px;
+    max-width: 720px;
   }
 }
 

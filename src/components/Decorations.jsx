@@ -17,10 +17,10 @@ function Dashes({ className, color }) {
 
 export default function Decorations() {
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+    <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden="true">
       <div className="bg-grid absolute inset-0" />
-      <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-zeek/30 blur-3xl" />
-      <div className="absolute -right-24 -bottom-24 h-72 w-72 rounded-full bg-neon/15 blur-3xl" />
+      <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-zeek/30 blur-3xl md:h-[32rem] md:w-[32rem]" />
+      <div className="absolute -right-24 -bottom-24 h-72 w-72 rounded-full bg-neon/15 blur-3xl md:h-[32rem] md:w-[32rem]" />
       <Sparkle className="animate-float absolute top-[42%] left-[2%] h-7 w-7 opacity-80" color="#6335ED" />
       <Sparkle className="animate-float absolute right-[8%] bottom-[22%] h-6 w-6 opacity-70 [animation-delay:1.2s]" color="#01E576" />
       <Dashes className="animate-float absolute right-[22%] bottom-[3%] h-10 w-10 [--rot:20deg] [animation-delay:0.6s]" color="#01E576" />
