@@ -1,9 +1,10 @@
 import Button from './Button'
+import { INSTAGRAM_URL } from '../lib/constants'
 import Confetti from './Confetti'
+import PrizeQr from './PrizeQr'
 import ScorePanel from './ScorePanel'
 import Trophy from './Trophy'
 
-const INSTAGRAM_URL = 'https://www.instagram.com/zeek_cr'
 
 function Stat({ label, value }) {
   return (
@@ -73,6 +74,7 @@ export default function VictoryScreen({ remainingMs, attempts, score, submission
       </div>
 
       <div className="animate-fade-up w-full max-w-sm md:max-w-md [animation-delay:560ms]">
+        <PrizeQr className="mb-3" />
         <Button variant="purple" onClick={onPlayAgain}>
           Jugar de nuevo
         </Button>

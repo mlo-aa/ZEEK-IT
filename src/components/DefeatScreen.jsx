@@ -1,4 +1,5 @@
 import Button from './Button'
+import PrizeQr from './PrizeQr'
 import ScorePanel from './ScorePanel'
 
 export default function DefeatScreen({ matchedPairs, totalPairs, score, submission, onShowRanking, onRetry, onHome }) {
@@ -29,6 +30,7 @@ export default function DefeatScreen({ matchedPairs, totalPairs, score, submissi
       </div>
 
       <div className="animate-fade-up w-full max-w-sm [animation-delay:340ms]">
+        <PrizeQr className="mb-3" />
         <Button onClick={onRetry}>Reintentar</Button>
         <button type="button" onClick={onHome} className="mt-3 text-sm font-bold text-white/70 underline underline-offset-4">
           Cambiar jugador o modo
