@@ -1,5 +1,6 @@
-import { MODES, NAME_MAX_LENGTH } from './constants'
-import { computeScore } from './score'
+// Importado también por api/scores.js en Node puro: usar extensiones .js.
+import { MODES, NAME_MAX_LENGTH } from './constants.js'
+import { computeScore } from './score.js'
 
 export const RANKING_TIMEZONE = 'America/Costa_Rica'
 export const RANKING_LIMIT = 20
