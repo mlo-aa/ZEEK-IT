@@ -1,0 +1,247 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/archivo/wdth.css';
+
+@theme {
+  --color-ink: #000000;
+  --color-neon: #01e576;
+  --color-zeek: #6335ed;
+  --color-zeek-light: #8a66ff;
+  --font-sans: 'Archivo Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    @apply bg-ink text-white font-sans antialiased;
+    overscroll-behavior: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    touch-action: manipulation;
+  }
+  button {
+    cursor: pointer;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-neon);
+    outline-offset: 3px;
+  }
+}
+
+@utility font-display {
+  font-weight: 900;
+  font-stretch: 125%;
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+@utility safe-screen {
+  min-height: 100dvh;
+  padding: max(env(safe-area-inset-top), 12px) max(env(safe-area-inset-right), 16px)
+    max(env(safe-area-inset-bottom), 16px) max(env(safe-area-inset-left), 16px);
+}
+
+/* ---------- Fondo ---------- */
+.bg-grid {
+  background-image:
+    linear-gradient(rgb(1 229 118 / 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(1 229 118 / 0.07) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+}
+
+/* ---------- Tablero ----------
+   El tablero se adapta al espacio disponible (ancho y alto) para que la
+   partida nunca necesite scroll. Tarjetas con proporción 4:5. */
+.board-area {
+  container-type: size;
+}
+.board {
+  --cols: 3;
+  --rows: 4;
+  --gap: clamp(8px, 2.4cqmin, 14px);
+  display: grid;
+  grid-template-columns: repeat(var(--cols), 1fr);
+  gap: var(--gap);
+  width: min(
+    100cqw,
+    (100cqh - (var(--rows) - 1) * var(--gap)) * var(--cols) * 4 / (5 * var(--rows)) +
+      (var(--cols) - 1) * var(--gap)
+  );
+  max-width: 520px;
+}
+@media (orientation: landscape) and (min-width: 640px) {
+  .board {
+    --cols: 4;
+    --rows: 3;
+    max-width: 640px;
+  }
+}
+
+/* ---------- Tarjeta con volteo 3D ---------- */
+.card {
+  perspective: 900px;
+  aspect-ratio: 4 / 5;
+}
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 420ms cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+.card.is-flipped .card-inner {
+  transform: rotateY(180deg);
+}
+.card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: clamp(10px, 3cqmin, 16px);
+}
+.card-front {
+  transform: rotateY(180deg);
+}
+.card:not(.is-flipped):active .card-inner {
+  transform: scale(0.95);
+}
+.card.is-matched .card-front {
+  animation: match-pop 620ms cubic-bezier(0.3, 1.6, 0.5, 1) 320ms both;
+}
+.card.is-miss .card-front {
+  animation: shake 360ms ease-in-out 380ms;
+}
+
+@keyframes match-pop {
+  0% { transform: rotateY(180deg) scale(1); box-shadow: 0 0 0 0 rgb(1 229 118 / 0.9); }
+  40% { transform: rotateY(180deg) scale(1.1); }
+  100% { transform: rotateY(180deg) scale(1); box-shadow: 0 0 0 14px rgb(1 229 118 / 0), 0 0 22px rgb(1 229 118 / 0.45); }
+}
+@keyframes shake {
+  0%, 100% { translate: 0; }
+  25% { translate: -6px; }
+  50% { translate: 5px; }
+  75% { translate: -3px; }
+}
+
+.match-burst {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+}
+.match-burst span {
+  position: absolute;
+  width: 6px;
+  height: 14px;
+  border-radius: 3px;
+  background: var(--color-neon);
+  opacity: 0;
+  animation: burst 620ms ease-out 360ms both;
+  rotate: var(--r);
+}
+@keyframes burst {
+  0% { opacity: 1; transform: translateY(0) scaleY(0.4); }
+  100% { opacity: 0; transform: translateY(-58cqmin) scaleY(1); }
+}
+
+/* ---------- Animaciones generales ---------- */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fade-up 520ms cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-4deg) scale(1); }
+  50% { transform: rotate(3deg) scale(1.04); }
+}
+.animate-wiggle {
+  animation: wiggle 2.4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(var(--rot, 0deg)); }
+  50% { transform: translateY(-10px) rotate(var(--rot, 0deg)); }
+}
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(1 229 118 / 0.55), 0 8px 30px rgb(1 229 118 / 0.25); }
+  50% { box-shadow: 0 0 0 10px rgb(1 229 118 / 0), 0 8px 30px rgb(1 229 118 / 0.4); }
+}
+.animate-glow {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes danger-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+.animate-danger {
+  animation: danger-pulse 1s ease-in-out infinite;
+}
+
+@keyframes trophy-in {
+  0% { opacity: 0; transform: scale(0.3) rotate(-18deg); }
+  60% { opacity: 1; transform: scale(1.12) rotate(6deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+.animate-trophy {
+  animation: trophy-in 800ms cubic-bezier(0.3, 1.5, 0.5, 1) both;
+}
+
+@keyframes ray {
+  0%, 100% { opacity: 0.35; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1); }
+}
+.animate-ray {
+  animation: ray 1.4s ease-in-out infinite;
+}
+
+@keyframes confetti-fall {
+  0% { transform: translate3d(0, -10vh, 0) rotate(0); opacity: 1; }
+  100% { transform: translate3d(var(--drift), 110vh, 0) rotate(var(--spin)); opacity: 1; }
+}
+.confetti {
+  position: absolute;
+  top: 0;
+  width: 9px;
+  height: 14px;
+  border-radius: 2px;
+  animation: confetti-fall var(--dur) linear var(--delay) infinite;
+}
+
+@keyframes live-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+.animate-live {
+  animation: live-dot 1s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+  .confetti {
+    display: none;
+  }
+}
