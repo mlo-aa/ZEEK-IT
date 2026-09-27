@@ -1,12 +1,18 @@
-import { useCallback, useEffect, useState } from 'react'
+import { Suspense, useCallback, useEffect, useState } from 'react'
 import ArcadeHub from './arcade/ArcadeHub'
+import { GAMES } from './arcade/games'
 import { pathFor, routeFromLocation, type Route } from './arcade/routes'
-import RushApp from './rush/RushApp'
-import TapApp from './tap/TapApp'
-import ZeekItApp from './ZeekItApp'
 
-// ZEEK ARCADE: menú de juegos. Rutas simples sin librerías:
-// /  → menú · /it → ZEEK IT · /rush → ZEEK RUSH · /tap → ZEEK TAP
+function Loading() {
+  return (
+    <div className="grid min-h-dvh place-items-center">
+      <span className="font-display animate-pulse text-3xl text-neon">Cargando…</span>
+    </div>
+  )
+}
+
+// ZEEK ARCADE: menú de juegos. Rutas simples sin librerías: / → menú,
+// /<juego> → cada juego (ver src/arcade/games.tsx).
 export default function App() {
   const [route, setRoute] = useState<Route>(() => routeFromLocation())
 
@@ -26,9 +32,13 @@ export default function App() {
   }, [])
 
   const toHub = useCallback(() => go('hub'), [go])
+  const game = GAMES.find((g) => g.id === route)
 
-  if (route === 'it') return <ZeekItApp onExit={toHub} />
-  if (route === 'rush') return <RushApp onExit={toHub} />
-  if (route === 'tap') return <TapApp onExit={toHub} />
-  return <ArcadeHub onOpen={go} />
+  if (!game) return <ArcadeHub onOpen={go} />
+  const { App: GameComponent } = game
+  return (
+    <Suspense fallback={<Loading />}>
+      <GameComponent onExit={toHub} />
+    </Suspense>
+  )
 }

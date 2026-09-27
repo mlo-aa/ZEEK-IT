@@ -1,90 +1,35 @@
-import type { ReactNode } from 'react'
 import Decorations from '../components/Decorations'
 import Header from '../components/Header'
-import CardIcon from '../components/CardIcon'
 import { useFullscreen } from '../hooks/useFullscreen'
-import RocketSvg from '../rush/RocketSvg'
-import { BadTarget, GoodTarget } from '../tap/TapScreens'
+import { GAMES, type GameEntry } from './games'
 import type { GameId } from './routes'
 
-interface GameCardProps {
-  title: string
-  tagline: string
-  chips: string[]
-  art: ReactNode
-  accent: 'neon' | 'purple'
-  onPlay: () => void
-  delay: string
-}
-
-function GameCard({ title, tagline, chips, art, accent, onPlay, delay }: GameCardProps) {
-  const neon = accent === 'neon'
+function GameTile({ game, onPlay, index }: { game: GameEntry; onPlay: () => void; index: number }) {
+  const neon = game.accent === 'neon'
+  const { Art } = game
   return (
     <button
       type="button"
       onClick={onPlay}
-      aria-label={`Jugar ${title}`}
-      className={`group animate-fade-up relative flex w-full items-center gap-4 overflow-hidden rounded-3xl border-2 p-4 text-left transition active:scale-[0.98] sm:p-5 lg:flex-col lg:items-start lg:p-7 ${
+      aria-label={`Jugar ${game.title}`}
+      className={`group animate-fade-up relative flex h-full flex-col items-center gap-2 overflow-hidden rounded-3xl border-2 p-3 text-center transition active:scale-[0.97] sm:p-4 ${
         neon ? 'border-neon/70 bg-neon/10 hover:bg-neon/15' : 'border-zeek bg-zeek/20 hover:bg-zeek/30'
       }`}
-      style={{ animationDelay: delay }}
+      style={{ animationDelay: `${80 + index * 60}ms` }}
     >
-      <div className="grid h-24 w-24 shrink-0 place-items-center sm:h-28 sm:w-28 lg:h-40 lg:w-40 lg:self-center">{art}</div>
-      <div className="min-w-0 flex-1">
-        <h2 className={`font-display text-3xl sm:text-4xl ${neon ? 'text-neon' : 'text-white'}`}>{title}</h2>
-        <p className="mt-1 text-sm leading-snug text-white/80 sm:text-base">{tagline}</p>
-        <div className="mt-2 flex flex-wrap gap-1.5">
-          {chips.map((c) => (
-            <span key={c} className="rounded-full bg-white/10 px-2.5 py-0.5 text-xs font-bold">
-              {c}
-            </span>
-          ))}
-        </div>
+      <div className="grid h-20 w-24 place-items-center sm:h-24 sm:w-28 lg:h-28 lg:w-32">
+        <Art />
       </div>
-      <span
-        className={`font-display grid h-12 w-12 shrink-0 place-items-center rounded-full text-xl transition group-hover:scale-110 lg:absolute lg:top-6 lg:right-6 ${
-          neon ? 'bg-neon text-ink' : 'bg-white text-zeek'
-        }`}
-        aria-hidden="true"
-      >
-        ▶
-      </span>
+      <h2 className={`font-display text-xl leading-none sm:text-2xl ${neon ? 'text-neon' : 'text-white'}`}>{game.title}</h2>
+      <p className="text-xs leading-snug text-white/75 sm:text-sm">{game.tagline}</p>
+      <div className="mt-auto flex flex-wrap justify-center gap-1">
+        {game.chips.map((c) => (
+          <span key={c} className="rounded-full bg-white/10 px-2 py-0.5 text-[0.68rem] font-bold whitespace-nowrap sm:text-xs">
+            {c}
+          </span>
+        ))}
+      </div>
     </button>
-  )
-}
-
-function MemoryArt() {
-  return (
-    <div className="relative h-full w-full" aria-hidden="true">
-      <div className="absolute top-1/2 left-1/2 grid h-[70%] w-[48%] -translate-x-[85%] -translate-y-1/2 -rotate-12 place-items-center rounded-xl border-2 border-zeek bg-ink">
-        <span className="font-display text-3xl text-zeek">Z</span>
-      </div>
-      <div className="absolute top-1/2 left-1/2 grid h-[70%] w-[48%] -translate-x-[15%] -translate-y-1/2 rotate-6 place-items-center rounded-xl bg-neon text-ink">
-        <CardIcon type="ia" className="h-[60%] w-[60%]" />
-      </div>
-    </div>
-  )
-}
-
-function RushArt() {
-  return (
-    <div className="relative h-full w-full" aria-hidden="true">
-      <span className="absolute top-[12%] left-[12%] h-5 w-5 rotate-12 rounded-md border-2 border-neon" />
-      <span className="absolute right-[14%] bottom-[18%] h-4 w-4 -rotate-12 rounded-md border-2 border-zeek-light" />
-      <span className="absolute top-[18%] right-[20%] text-lg text-white">★</span>
-      <div className="absolute inset-0 grid place-items-center">
-        <RocketSvg className="rush-float h-[85%] rotate-12" />
-      </div>
-    </div>
-  )
-}
-
-function TapArt() {
-  return (
-    <div className="relative h-full w-full" aria-hidden="true">
-      <GoodTarget className="tap-float absolute top-[8%] left-[10%] h-[55%] w-[55%]" />
-      <BadTarget className="tap-float absolute right-[6%] bottom-[8%] h-[42%] w-[42%] [animation-delay:0.7s]" />
-    </div>
   )
 }
 
@@ -94,47 +39,23 @@ export default function ArcadeHub({ onOpen }: { onOpen: (game: GameId) => void }
     <div className="safe-screen relative mx-auto flex min-h-dvh w-full max-w-xl flex-col overflow-x-hidden md:max-w-3xl lg:max-w-6xl lg:px-10">
       <Decorations />
       <Header fullscreen={fullscreen} />
-      <main className="relative z-10 flex flex-1 flex-col items-center justify-center gap-8 py-6 text-center">
+      <main className="relative z-10 flex flex-1 flex-col items-center justify-center gap-7 py-6 text-center">
         <div className="animate-fade-up">
           <h1 className="font-display text-center select-none">
-            <span className="block -rotate-2 text-[clamp(3.4rem,17vw,6.5rem)] text-neon drop-shadow-[0_6px_0_#6335ED]">
-              ZEEK
-            </span>
-            <span className="mt-1 block rotate-1 text-[clamp(3rem,15vw,5.8rem)] text-white drop-shadow-[0_5px_0_#6335ED]">
+            <span className="block -rotate-2 text-[clamp(3rem,15vw,5.8rem)] text-neon drop-shadow-[0_6px_0_#6335ED]">ZEEK</span>
+            <span className="mt-1 block rotate-1 text-[clamp(2.7rem,13vw,5.2rem)] text-white drop-shadow-[0_5px_0_#6335ED]">
               ARCADE
             </span>
           </h1>
-          <p className="mt-4 text-lg text-white/80">Minijuegos para builders. Elegí tu reto 👾</p>
+          <p className="mt-3 text-lg text-white/80">
+            {GAMES.length} minijuegos para builders. Elegí tu reto 👾
+          </p>
         </div>
 
-        <div className="grid w-full max-w-md gap-4 md:max-w-2xl lg:max-w-6xl lg:grid-cols-3 lg:gap-6">
-          <GameCard
-            title="ZEEK IT"
-            tagline="Memorama: encontrá todas las parejas antes de que se acabe el tiempo."
-            chips={['🧠 Memoria', '⏱️ 45 s', '🏆 Ranking']}
-            art={<MemoryArt />}
-            accent="neon"
-            onPlay={() => onOpen('it')}
-            delay="120ms"
-          />
-          <GameCard
-            title="ZEEK RUSH"
-            tagline="Pilotá tu cohete, esquivá asteroides y recolectá estrellas."
-            chips={['🚀 Arcade', '⏱️ 30 s', '♥ 3 vidas']}
-            art={<RushArt />}
-            accent="purple"
-            onPlay={() => onOpen('rush')}
-            delay="220ms"
-          />
-          <GameCard
-            title="ZEEK TAP"
-            tagline="Tocá los verdes, evitá los morados: 15 puntos en 20 segundos."
-            chips={['⚡ Reflejos', '⏱️ 20 s', '🎯 Meta 15']}
-            art={<TapArt />}
-            accent="neon"
-            onPlay={() => onOpen('tap')}
-            delay="320ms"
-          />
+        <div className="grid w-full grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 lg:gap-5">
+          {GAMES.map((g, i) => (
+            <GameTile key={g.id} game={g} index={i} onPlay={() => onOpen(g.id)} />
+          ))}
         </div>
       </main>
     </div>

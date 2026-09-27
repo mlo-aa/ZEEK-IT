@@ -1,18 +1,15 @@
-export type GameId = 'it' | 'rush' | 'tap'
+export const GAME_IDS = ['it', 'rush', 'tap', 'sort', 'connect', 'stack', 'maze', 'break'] as const
+export type GameId = (typeof GAME_IDS)[number]
 export type Route = GameId | 'hub'
 
-const PATHS: Record<Route, string> = { hub: '/', it: '/it', rush: '/rush', tap: '/tap' }
-
 export function routeFromLocation(loc: Location = window.location): Route {
-  const path = loc.pathname.replace(/\/+$/, '') || '/'
-  if (path === '/it') return 'it'
-  if (path === '/rush') return 'rush'
-  if (path === '/tap') return 'tap'
+  const path = (loc.pathname.replace(/\/+$/, '') || '/').slice(1)
+  if ((GAME_IDS as readonly string[]).includes(path)) return path as GameId
   // Compatibilidad: /#ranking abría el ranking de ZEEK IT.
   if (loc.hash === '#ranking') return 'it'
   return 'hub'
 }
 
 export function pathFor(route: Route) {
-  return PATHS[route]
+  return route === 'hub' ? '/' : `/${route}`
 }
