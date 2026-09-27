@@ -3,13 +3,74 @@
 Colección de minijuegos de ZEEK para el stand en eventos. La gente escanea un QR
 y juega desde el celular, sin cuentas ni instalación.
 
-| Ruta | Juego |
-| --- | --- |
-| `/` | Menú de ZEEK ARCADE |
-| `/it` | **ZEEK IT**: memorama (ver abajo) |
-| `/rush` | **ZEEK RUSH** 🚀: arcade espacial de 30 segundos |
-| `/tap` | **ZEEK TAP** ⚡: reflejos, 15 puntos en 20 segundos |
-| `/#ranking` o `/it#ranking` | Ranking del día de ZEEK IT (pantalla del stand) |
+| Ruta | Juego | Reto |
+| --- | --- | --- |
+| `/` | Menú de ZEEK ARCADE | |
+| `/it` | **ZEEK IT** 🧠 memorama | 6 u 8 parejas en 45–50 s · ranking del día |
+| `/rush` | **ZEEK RUSH** 🚀 esquivar asteroides | sobrevivir 30 s con 3 vidas |
+| `/tap` | **ZEEK TAP** ⚡ reflejos | 15 puntos en 20 s |
+| `/sort` | **ZEEK SORT** 📦 clasificar | 15 aciertos en 40 s |
+| `/connect` | **ZEEK CONNECT** 🔗 unir pares | 4 pares en 45 s |
+| `/stack` | **ZEEK STACK** 🏗️ apilar | 10 pisos en 45 s |
+| `/maze` | **ZEEK MAZE** 🌀 laberinto | llegar al portal en 45 s con 3 vidas |
+| `/break` | **ZEEK BREAK** 💥 breakout | 20 bloques en 60 s con 3 vidas |
+| `/#ranking` o `/it#ranking` | Ranking del día de ZEEK IT (pantalla del stand) | |
+
+## Estructura
+
+```
+src/
+  App.tsx                 rutas (se generan del registro)
+  arcade/
+    games.tsx             registro de juegos: título, tarjeta, carga diferida
+    ArcadeHub.tsx         menú
+    kit/                  piezas compartidas por los juegos nuevos:
+      GameApp.tsx           flujo bienvenida → partida → victoria/derrota
+      screens.tsx           pantallas de bienvenida y resultado
+      PlayLayout.tsx, Hud   pantalla de juego, HUD, cuenta 3-2-1, pausa
+      usePlayState.ts       cuenta regresiva + pausa automática
+      useFrame / useCanvas / particles / useFinish / testHook
+  games/<juego>/          sort, connect, stack, maze, break: cada uno con
+    engine.ts               lógica pura (sin DOM) y testeada
+    render.ts               dibujo en canvas (connect usa SVG)
+    <Juego>Play.tsx         partida · <Juego>App.tsx textos y resultado
+  rush/, tap/, ZeekItApp  juegos anteriores (sin cambios de lógica)
+```
+
+Cada juego tiene su propio estado, se carga por separado y se puede
+modificar sin tocar los demás. Para agregar uno: crear `src/games/<id>/`,
+sumarlo a `GAME_IDS` (`arcade/routes.ts`) y a `GAMES` (`arcade/games.tsx`).
+
+**Todos:** sin cuentas, sonido apagado por defecto, pausa automática al
+cambiar de pestaña (con cuenta 3-2-1 al volver), sin desplazamiento durante la
+partida, y sin QR de premio dentro de la app (lo entrega el equipo de ZEEK al
+ver la pantalla de victoria).
+
+## ZEEK SORT · CONNECT · STACK · MAZE · BREAK
+
+- **SORT:** los objetos caen; se arrastran (o se "tiran" de costado) al
+  contenedor verde o morado. 3 rondas: Hardware/Software, IA/Robótica,
+  Diseño/Programación. +1 / −1 (nunca menos de 0). Caída lenta, media y rápida.
+- **CONNECT:** 12 tableros 5 × 5 guardados con su solución (resolubles por
+  construcción, verificados en tests). Sin diagonales ni celdas compartidas; se
+  puede retroceder, cortar una línea o borrar todo. Los puntos tienen símbolos
+  además de color.
+- **STACK:** tocar (o barra espaciadora) suelta el bloque; lo que sobresale se
+  cae. ±5 px = PERFECT y conserva el ancho. Cada piso es 8 % más rápido.
+- **MAZE:** 6 laberintos; arrastre relativo o flechas/WASD. Las trampas cruzan
+  el camino desde ramales laterales (siempre hay un momento para pasar); 3 vidas
+  con 1,5 s de invulnerabilidad.
+- **BREAK:** 20 bloques (morados de 2 golpes con grietas). El punto de impacto
+  en la plataforma define el ángulo (nunca plano ni vertical). En pantallas
+  anchas el campo es una columna centrada.
+
+La dificultad de TAP, STACK y BREAK está medida con jugadores simulados en los
+tests (distintos tiempos de reacción / precisión).
+
+### Tests de navegador
+
+`npm run build:e2e` genera un build con un gancho de pruebas
+(`window.__zeek`) que el build de producción elimina.
 
 ## ZEEK RUSH
 
@@ -74,7 +135,7 @@ Sin cuentas ni instalación.
 
 ## Stack
 
-- React 19 + Vite + TypeScript (ZEEK RUSH y el menú)
+- React 19 + Vite + TypeScript (menú, kit y juegos nuevos)
 - Tailwind CSS v4
 - Tipografía Archivo auto-alojada (funciona aunque el Wi-Fi del evento sea malo)
 - Sonidos generados con Web Audio (sin archivos), con botón para silenciar
