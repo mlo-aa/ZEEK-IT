@@ -8,6 +8,8 @@ import {
   connectedCount,
   createConnectState,
   extend,
+  filledCount,
+  isSolved,
   extendToward,
   start,
   step,
@@ -41,9 +43,10 @@ describe('ZEEK CONNECT levels', () => {
     expect(new Set(LEVELS.map((l) => l.join('/'))).size).toBe(LEVELS.length)
   })
 
-  it.each(LEVELS.map((l, i) => [i, l] as const))('board %i is a valid 5×5 with 4 simple, separate paths', (_, level) => {
+  it.each(LEVELS.map((l, i) => [i, l] as const))('board %i is a valid 5×5 with 4 simple paths that fill every cell', (_, level) => {
     expect(level).toHaveLength(SIZE)
-    for (const row of level) expect(row).toMatch(/^[GPBO.]{5}$/)
+    // Sin celdas libres: la solución llena las 25.
+    for (const row of level) expect(row).toMatch(/^[GPBO]{5}$/)
     for (const color of COLORS) {
       const cells: number[] = []
       level.forEach((row, r) => [...row].forEach((ch, c) => ch === color && cells.push(cellOf(r, c))))
@@ -70,69 +73,87 @@ describe('ZEEK CONNECT levels', () => {
       stop(s)
     }
     expect(connectedCount(s)).toBe(4)
+    expect(filledCount(s)).toBe(SIZE * SIZE)
     expect(s.status).toBe('won')
   })
 })
 
 describe('ZEEK CONNECT rules', () => {
-  const level = 0 // 'BGG.G', 'B.GGG', 'BBPPP', '.B..P', 'OOOOO'
+  const level = 0 // 'OOOOG', 'OGGGG', 'PGBBB', 'PGPPB', 'PPPBB'
   const fresh = () => createConnectState(LEVELS, level)
 
   it('only starts from an endpoint or an existing line', () => {
     const s = fresh()
-    expect(start(s, cellOf(0, 3))).toBe(false) // celda vacía
-    expect(start(s, cellOf(0, 1))).toBe(true) // extremo verde
+    expect(start(s, cellOf(1, 2))).toBe(false) // celda vacía
+    expect(start(s, cellOf(1, 0))).toBe(true) // extremo naranja
   })
 
   it('no diagonals, no jumping, no crossing other colors', () => {
     const s = fresh()
-    start(s, cellOf(0, 1)) // verde
-    expect(extend(s, cellOf(1, 2))).toBe(false) // diagonal
-    expect(extend(s, cellOf(0, 3))).toBe(false) // salto
-    expect(extend(s, cellOf(0, 0))).toBe(false) // extremo azul
-    expect(extend(s, cellOf(1, 1))).toBe(true)
+    start(s, cellOf(0, 4)) // verde
+    expect(extend(s, cellOf(1, 3))).toBe(false) // diagonal
+    expect(extend(s, cellOf(2, 4))).toBe(false) // salto
+    expect(extend(s, cellOf(0, 3))).toBe(false) // extremo naranja
+    expect(extend(s, cellOf(1, 4))).toBe(true)
     stop(s)
-    start(s, cellOf(2, 2)) // morado
-    extend(s, cellOf(2, 1))
-    expect(extend(s, cellOf(1, 1))).toBe(false) // celda con línea verde
+    start(s, cellOf(0, 3)) // naranja
+    extend(s, cellOf(1, 3))
+    expect(extend(s, cellOf(1, 4))).toBe(false) // celda con línea verde
   })
 
   it('going back over the line shortens it; starting again from an endpoint redraws it', () => {
     const s = fresh()
-    start(s, cellOf(0, 1))
-    extend(s, cellOf(0, 2))
-    extend(s, cellOf(0, 3))
-    expect(extend(s, cellOf(0, 2))).toBe(true)
-    expect(s.paths.G).toEqual([cellOf(0, 1), cellOf(0, 2)])
+    start(s, cellOf(0, 4))
+    extend(s, cellOf(1, 4))
+    extend(s, cellOf(1, 3))
+    expect(extend(s, cellOf(1, 4))).toBe(true)
+    expect(s.paths.G).toEqual([cellOf(0, 4), cellOf(1, 4)])
     stop(s)
-    start(s, cellOf(0, 1))
-    expect(s.paths.G).toEqual([cellOf(0, 1)])
+    start(s, cellOf(0, 4))
+    expect(s.paths.G).toEqual([cellOf(0, 4)])
   })
 
   it('touching a drawn line cuts it there and continues', () => {
     const s = fresh()
-    start(s, cellOf(0, 1))
-    extend(s, cellOf(0, 2))
-    extend(s, cellOf(0, 3))
+    start(s, cellOf(0, 4))
+    extend(s, cellOf(1, 4))
+    extend(s, cellOf(1, 3))
     stop(s)
-    start(s, cellOf(0, 2))
+    start(s, cellOf(1, 4))
     expect(s.drawing).toBe('G')
-    expect(s.paths.G).toEqual([cellOf(0, 1), cellOf(0, 2)])
+    expect(s.paths.G).toEqual([cellOf(0, 4), cellOf(1, 4)])
   })
 
   it('fast drags that skip cells still follow the grid', () => {
     const s = fresh()
-    start(s, cellOf(4, 0)) // naranja
-    extendToward(s, cellOf(4, 4))
-    expect(s.paths.O).toEqual([0, 1, 2, 3, 4].map((c) => cellOf(4, c)))
+    start(s, cellOf(0, 3)) // naranja
+    extendToward(s, cellOf(0, 0))
+    expect(s.paths.O).toEqual([3, 2, 1, 0].map((c) => cellOf(0, c)))
+  })
+
+  it('connecting every pair is not enough: all 25 cells must be filled', () => {
+    // Tablero con celdas libres en su solución: los 4 pares se conectan sin llenar todo.
+    const gappy = ['BGG.G', 'B.GGG', 'BBPPP', '.B..P', 'OOOOO']
+    const s = createConnectState([gappy], 0)
+    for (const color of COLORS) {
+      const [a] = s.ends[color]
+      start(s, a)
+      for (const cell of solutionPath(gappy, color, a).slice(1)) extend(s, cell)
+      stop(s)
+    }
+    expect(connectedCount(s)).toBe(4)
+    expect(filledCount(s)).toBe(SIZE * SIZE - 5)
+    expect(isSolved(s)).toBe(false)
+    expect(s.status).toBe('playing')
   })
 
   it('clearing removes every line; time over is a loss', () => {
     const s = fresh()
-    start(s, cellOf(4, 0))
-    extendToward(s, cellOf(4, 4))
+    start(s, cellOf(0, 3))
+    extendToward(s, cellOf(0, 0))
     clearAll(s)
     expect(connectedCount(s)).toBe(0)
+    expect(filledCount(s)).toBe(8) // solo los extremos
     step(s, 100)
     for (let t = 0; t < GAME_DURATION_MS; t += 100) step(s, 100)
     expect(s.status).toBe('lost')

@@ -9,8 +9,8 @@ y juega desde el celular, sin cuentas ni instalación.
 | `/it` | **ZEEK IT** 🧠 memorama | 6 u 8 parejas en 45–50 s · ranking del día |
 | `/rush` | **ZEEK RUSH** 🚀 esquivar asteroides | sobrevivir 30 s con 3 vidas |
 | `/tap` | **ZEEK TAP** ⚡ reflejos | 15 puntos en 20 s |
-| `/sort` | **ZEEK SORT** 📦 clasificar | 15 aciertos en 40 s |
-| `/connect` | **ZEEK CONNECT** 🔗 unir pares | 4 pares en 45 s |
+| `/sort` | **ZEEK SORT** 📦 clasificar | 22 puntos en 40 s |
+| `/connect` | **ZEEK CONNECT** 🔗 unir pares | 4 pares y las 25 celdas llenas en 45 s |
 | `/stack` | **ZEEK STACK** 🏗️ apilar | 10 pisos en 45 s |
 | `/maze` | **ZEEK MAZE** 🌀 laberinto | llegar al portal en 45 s con 3 vidas |
 | `/break` | **ZEEK BREAK** 💥 breakout | 20 bloques en 60 s con 3 vidas |
@@ -50,9 +50,12 @@ ver la pantalla de victoria).
 
 - **SORT:** los objetos caen; se arrastran (o se "tiran" de costado) al
   contenedor verde o morado. 3 rondas: Hardware/Software, IA/Robótica,
-  Diseño/Programación. +1 / −1 (nunca menos de 0). Caída lenta, media y rápida.
+  Diseño/Programación. +1 / −1 (nunca menos de 0); un objeto que llega abajo
+  sin clasificar también resta 1. Meta: 22 puntos en 40 s, hasta 4 objetos a
+  la vez y caída cada vez más rápida.
 - **CONNECT:** 12 tableros 5 × 5 guardados con su solución (resolubles por
-  construcción, verificados en tests). Sin diagonales ni celdas compartidas; se
+  construcción y de solución única, verificados en tests). Para ganar hay que
+  conectar los 4 pares Y llenar las 25 celdas (estilo Flow). Sin diagonales ni celdas compartidas; se
   puede retroceder, cortar una línea o borrar todo. Los puntos tienen símbolos
   además de color.
 - **STACK:** tocar (o barra espaciadora) suelta el bloque; lo que sobresale se
@@ -64,7 +67,7 @@ ver la pantalla de victoria).
   en la plataforma define el ángulo (nunca plano ni vertical). En pantallas
   anchas el campo es una columna centrada.
 
-La dificultad de TAP, STACK y BREAK está medida con jugadores simulados en los
+La dificultad de TAP, SORT, STACK y BREAK está medida con jugadores simulados en los
 tests (distintos tiempos de reacción / precisión).
 
 ### Tests de navegador

@@ -14,12 +14,14 @@ import {
   connectedCount,
   createConnectState,
   extendToward,
+  filledCount,
   isComplete,
   rowOf,
   start,
   step,
   stop,
   timeLeftMs,
+  TOTAL_CELLS,
   type Cell,
   type ConnectState,
 } from './engine'
@@ -28,6 +30,7 @@ import { COLORS, COLOR_HEX, COLOR_NAME, LEVELS, SIZE, type Color } from './level
 export interface ConnectResult {
   won: boolean
   connected: number
+  filled: number
   remainingMs: number
 }
 
@@ -71,7 +74,7 @@ export default function ConnectPlay({ muted, onToggleMute, play, onFinish }: Pla
     const secs = Math.ceil(timeLeftMs(s) / 1000)
     if (secs !== seconds) setSeconds(secs)
     if (s.status !== 'playing') {
-      end({ won: s.status === 'won', connected: connectedCount(s), remainingMs: timeLeftMs(s) }, () =>
+      end({ won: s.status === 'won', connected: connectedCount(s), filled: filledCount(s), remainingMs: timeLeftMs(s) }, () =>
         play(s.status === 'won' ? 'win' : 'lose'),
       )
     }
@@ -119,18 +122,21 @@ export default function ConnectPlay({ muted, onToggleMute, play, onFinish }: Pla
 
   const s = stateRef.current
   const connected = connectedCount(s)
+  const filled = filledCount(s)
+  // Todos los pares unidos pero con huecos: hay que rearmar alguna línea.
+  const gaps = connected === COLORS.length && filled < TOTAL_CELLS
   const solved = s.status === 'won'
 
   return (
     <PlayLayout
       areaRef={areaRef}
-      areaLabel="Tablero: uní cada par de puntos del mismo color"
+      areaLabel="Tablero: uní cada par de puntos del mismo color y llená todas las celdas"
       state={ctrl}
       muted={muted}
       onToggleMute={onToggleMute}
       hud={
         <>
-          <HudStat label="Pares" value={connected} goal={COLORS.length} accent={connected > 0} />
+          <HudStat label="Celdas" value={filled} goal={TOTAL_CELLS} accent={filled === TOTAL_CELLS} />
           <HudTimer seconds={seconds} />
           <button
             type="button"
@@ -146,16 +152,22 @@ export default function ConnectPlay({ muted, onToggleMute, play, onFinish }: Pla
         </>
       }
       subHud={
-        <div className="flex justify-center gap-2" aria-label="Pares">
-          {COLORS.map((c) => (
-            <span
-              key={c}
-              className={`h-2.5 w-10 rounded-full transition ${isComplete(s, c) ? '' : 'opacity-25'}`}
-              style={{ background: COLOR_HEX[c] }}
-              title={COLOR_NAME[c]}
-            />
-          ))}
-        </div>
+        gaps ? (
+          <p className="connect-gaps text-center text-sm font-bold text-neon" aria-live="polite">
+            ¡Faltan {TOTAL_CELLS - filled} celdas! Rearmá una línea para llenarlas todas.
+          </p>
+        ) : (
+          <div className="flex justify-center gap-2" aria-label={`${connected} de 4 pares conectados`}>
+            {COLORS.map((c) => (
+              <span
+                key={c}
+                className={`h-2.5 w-10 rounded-full transition ${isComplete(s, c) ? '' : 'opacity-25'}`}
+                style={{ background: COLOR_HEX[c] }}
+                title={COLOR_NAME[c]}
+              />
+            ))}
+          </div>
+        )
       }
     >
       <div className="grid h-full w-full place-items-center">
@@ -170,7 +182,7 @@ export default function ConnectPlay({ muted, onToggleMute, play, onFinish }: Pla
           onPointerUp={onUp}
           onPointerCancel={onUp}
           role="img"
-          aria-label={`Tablero 5 por 5, ${connected} de 4 pares conectados`}
+          aria-label={`Tablero 5 por 5, ${connected} de 4 pares conectados, ${filled} de ${TOTAL_CELLS} celdas llenas`}
         >
           <rect x="-6" y="-6" width={VIEW + 12} height={VIEW + 12} rx="22" fill="#07021a" stroke="#6335ED" strokeWidth="4" />
           {Array.from({ length: SIZE - 1 }, (_, i) => (

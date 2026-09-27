@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { seeded } from '../../../arcade/kit/particles'
 import { GAME_DURATION_MS, GOAL, MAX_ITEMS, ROUNDS } from '../config'
-import { binTop, classify, createSortState, drag, grab, itemSize, pick, release, step, type SortState } from '../engine'
+import { binTop, classify, createSortState, drag, grab, itemSize, pick, release, step, type Falling, type Side, type SortState } from '../engine'
 
 const FRAME = 1000 / 60
 const run = (s: SortState, ms: number, each?: (s: SortState) => void) => {
@@ -25,7 +25,7 @@ describe('ZEEK SORT content', () => {
 })
 
 describe('ZEEK SORT engine', () => {
-  it('spawns up to 3 items at a time, inside the screen, above the bins', () => {
+  it(`spawns up to ${MAX_ITEMS} items at a time, inside the screen, above the bins`, () => {
     for (const [w, h] of [
       [360, 600],
       [820, 1000],
@@ -69,7 +69,7 @@ describe('ZEEK SORT engine', () => {
     expect(speeds[1]).toBeLessThan(speeds[2])
   })
 
-  it('+1 for correct, -1 for wrong, never below zero; missed items cost nothing', () => {
+  it('+1 for correct, -1 for wrong or dropped, never below zero', () => {
     const s = createSortState(390, 700, seeded(4))
     run(s, 500)
     const first = s.items[0]
@@ -80,10 +80,21 @@ describe('ZEEK SORT engine', () => {
     const it = s.items[0]
     expect(classify(s, it, it.side)).toBe('correct')
     expect(s.score).toBe(1)
-    // Dejar caer todo sin tocar: no resta.
-    run(s, 9000)
-    expect(s.score).toBe(1)
-    expect(s.missed).toBeGreaterThan(0)
+    // Un objeto que llega abajo sin clasificar resta 1.
+    const drop = createSortState(390, 700, seeded(10))
+    run(drop, 500)
+    drop.items.length = 1
+    drop.nextSpawnAt = Infinity
+    drop.score = 5
+    run(drop, 6000)
+    expect(drop.missed).toBe(1)
+    expect(drop.score).toBe(4)
+    expect(drop.events.some((e) => e.type === 'missed')).toBe(true)
+    // Nunca baja de 0.
+    const idle = createSortState(390, 700, seeded(9))
+    run(idle, 12_000)
+    expect(idle.missed).toBeGreaterThan(3)
+    expect(idle.score).toBe(0)
   })
 
   it('dragging onto the right bin classifies it; letting go mid-air resumes falling', () => {
@@ -113,7 +124,7 @@ describe('ZEEK SORT engine', () => {
     expect(release(s, it)).toBe('correct')
   })
 
-  it('reaching 15 wins immediately; time over is a loss', () => {
+  it(`reaching ${GOAL} wins immediately; time over is a loss`, () => {
     const s = createSortState(390, 700, seeded(7))
     run(s, 500)
     s.score = GOAL - 1
@@ -125,16 +136,44 @@ describe('ZEEK SORT engine', () => {
     expect(lost.status).toBe('lost')
   })
 
-  it('a player who sorts each item ~1.2 s after it appears wins', () => {
-    for (let seed = 0; seed < 20; seed++) {
-      const s = createSortState(390, 700, seeded(seed))
-      const seen = new Map<number, number>()
-      run(s, GAME_DURATION_MS, (st) => {
-        for (const it of st.items) if (!seen.has(it.id)) seen.set(it.id, st.elapsed)
-        const ready = st.items.find((it) => st.elapsed - seen.get(it.id)! > 1200)
-        if (ready) classify(st, ready, ready.side)
-      })
-      expect(s.status).toBe('won')
-    }
+  /**
+   * Jugador simulado: atiende un objeto por vez (el más bajo), tarda `react` ms
+   * en reconocerlo y `handle` ms en arrastrarlo, y se equivoca con probabilidad `err`.
+   */
+  function human(seed: number, react: number, handle: number, err: number) {
+    const rng = seeded(seed * 7919 + 1)
+    const s = createSortState(390, 700, seeded(seed))
+    const seen = new Map<number, number>()
+    let held: Falling | null = null
+    let doneAt = 0
+    run(s, GAME_DURATION_MS + 100, (st) => {
+      for (const it of st.items) if (!seen.has(it.id)) seen.set(it.id, st.elapsed)
+      if (held && !st.items.includes(held)) held = null
+      if (held && st.elapsed >= doneAt) {
+        classify(st, held, rng() < err ? ((1 - held.side) as Side) : held.side)
+        held = null
+      } else if (!held) {
+        const next = st.items.filter((it) => st.elapsed - seen.get(it.id)! >= react).sort((a, b) => b.y - a.y)[0]
+        if (next) {
+          held = next
+          doneAt = st.elapsed + handle
+          grab(st, next)
+        }
+      }
+    })
+    return s
+  }
+  const winRate = (react: number, handle: number, err: number) => {
+    let wins = 0
+    for (let seed = 0; seed < 60; seed++) if (human(seed, react, handle, err).status === 'won') wins++
+    return wins / 60
+  }
+
+  it('is hard: a quick, accurate player wins; an average one sometimes; a slow one does not', () => {
+    expect(winRate(450, 850, 0.08)).toBeGreaterThanOrEqual(0.95) // rápido
+    const avg = winRate(550, 1050, 0.12) // promedio
+    expect(avg).toBeGreaterThan(0.4)
+    expect(avg).toBeLessThan(0.9)
+    expect(winRate(700, 1400, 0.15)).toBeLessThanOrEqual(0.05) // lento
   })
 })

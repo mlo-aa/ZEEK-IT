@@ -1,8 +1,10 @@
 // ZEEK SORT: parámetros y contenido.
 
 export const GAME_DURATION_MS = 40_000
-export const GOAL = 15
-export const MAX_ITEMS = 3
+export const GOAL = 22
+export const MAX_ITEMS = 4
+/** Lo que resta un objeto que llega abajo sin clasificar. */
+export const MISS_PENALTY = 1
 
 export interface Item {
   icon: string
@@ -102,9 +104,9 @@ export interface Speed {
 
 // 0–15 s lento · 15–30 s medio · 30–40 s rápido.
 export const SPEEDS: Speed[] = [
-  { untilMs: 15_000, fallSeconds: 7, spawnEveryMs: 1_500 },
-  { untilMs: 30_000, fallSeconds: 5, spawnEveryMs: 1_150 },
-  { untilMs: Infinity, fallSeconds: 3.6, spawnEveryMs: 850 },
+  { untilMs: 15_000, fallSeconds: 5, spawnEveryMs: 1_100 },
+  { untilMs: 30_000, fallSeconds: 3.8, spawnEveryMs: 850 },
+  { untilMs: Infinity, fallSeconds: 2.8, spawnEveryMs: 650 },
 ]
 
 export const roundAt = (ms: number) => [...ROUNDS].reverse().find((r) => ms >= r.fromMs) ?? ROUNDS[0]

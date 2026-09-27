@@ -88,6 +88,21 @@ export function isComplete(s: ConnectState, color: Color) {
 
 export const connectedCount = (s: ConnectState) => COLORS.filter((c) => isComplete(s, c)).length
 
+/** Celdas ocupadas por alguna línea (los extremos cuentan aunque no tengan línea). */
+export function filledCount(s: ConnectState) {
+  const cells = new Set<Cell>()
+  for (const c of COLORS) {
+    for (const cell of s.ends[c]) cells.add(cell)
+    for (const cell of s.paths[c]) cells.add(cell)
+  }
+  return cells.size
+}
+
+export const TOTAL_CELLS = SIZE * SIZE
+
+/** Se gana con los 4 pares conectados Y todas las celdas llenas. */
+export const isSolved = (s: ConnectState) => connectedCount(s) === COLORS.length && filledCount(s) === TOTAL_CELLS
+
 /**
  * Empieza a dibujar: desde un extremo (borra y rehace esa conexión) o desde
  * una celda de un camino ya dibujado (lo corta ahí y sigue).
@@ -140,7 +155,7 @@ export function extend(s: ConnectState, cell: Cell): boolean {
   path.push(cell)
   if (isComplete(s, color)) {
     s.completedAt[color] = s.elapsed
-    if (connectedCount(s) === COLORS.length) {
+    if (isSolved(s)) {
       s.status = 'won'
       s.drawing = null
     }

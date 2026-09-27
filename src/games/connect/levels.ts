@@ -1,20 +1,21 @@
 // Tableros de ZEEK CONNECT (5 × 5). Cada tablero guarda SU SOLUCIÓN: cada letra
 // es un camino simple entre sus dos extremos (G verde, P morado, B azul,
-// O naranja; "." celda libre). El juego muestra solo los extremos. Así cada
-// nivel es resoluble por construcción, y los tests lo verifican.
+// O naranja) y entre los 4 caminos cubren LAS 25 CELDAS. El juego muestra solo
+// los extremos. Cada nivel es resoluble por construcción y tiene una única
+// solución (generados con un buscador y verificados en los tests).
 export const LEVELS: string[][] = [
-  ['BGG.G', 'B.GGG', 'BBPPP', '.B..P', 'OOOOO'],
-  ['BBBBO', 'BGG.O', 'GGOOO', 'GPPP.', 'GP...'],
-  ['GGOOO', 'GBP.O', 'GBPPP', 'GBB.P', 'GGB..'],
-  ['POOO.', 'PPGOO', '.PGB.', 'PPGB.', '..GBB'],
-  ['OGGG.', 'OG..P', 'O.PPP', 'OPPBB', 'BBBB.'],
-  ['PGGGB', 'PGBBB', 'PGBO.', 'PPPO.', '..POO'],
-  ['GG..B', 'OG..B', 'OGGBB', 'OP.PP', 'OPPP.'],
-  ['GGG..', 'G.GGP', '.OOPP', 'OOPPB', 'O.BBB'],
-  ['GOOOO', 'GGGG.', 'B..G.', 'BPPG.', 'BBPP.'],
-  ['BBBBB', '.PGGG', '.PGOO', 'PPG.O', 'P.GGO'],
-  ['G.OO.', 'GB.OO', 'GBPPP', 'GBB.P', 'GGB..'],
-  ['.GGGG', '.G..G', 'OOPP.', 'OB.PP', 'OBBBP'],
+  ['OOOOG', 'OGGGG', 'PGBBB', 'PGPPB', 'PPPBB'],
+  ['OPPPP', 'OOBBP', 'GOBPP', 'GOBPB', 'GGBBB'],
+  ['BBBBP', 'OOOBP', 'OGGPP', 'OGPPG', 'OGGGG'],
+  ['BBGGG', 'BPGOO', 'BPGGO', 'BPOGO', 'PPOOO'],
+  ['PPPPO', 'BOOOO', 'BOGGG', 'BOOBG', 'BBBBG'],
+  ['GGGGB', 'GBBBB', 'BBPPP', 'BOOOP', 'OOPPP'],
+  ['OBBBB', 'OGGGG', 'OOPPG', 'POOPG', 'PPPPG'],
+  ['OOOOB', 'PPPOB', 'PGGGB', 'PGBBB', 'PGGGG'],
+  ['BOOOO', 'BBPPO', 'GBGPO', 'GBGPO', 'GGGPP'],
+  ['POOOO', 'PPPPO', 'GGGOO', 'GBBOB', 'GGBBB'],
+  ['BPPPP', 'BPBOP', 'BBBOO', 'GGGGO', 'GOOOO'],
+  ['GPPPG', 'GPGGG', 'GGGOB', 'OOOOB', 'OBBBB'],
 ]
 
 export const SIZE = 5

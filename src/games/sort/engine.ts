@@ -1,5 +1,5 @@
 import { Particles, NEON, PURPLE, type Rng } from '../../arcade/kit/particles'
-import { GAME_DURATION_MS, GOAL, MAX_ITEMS, ROUNDS, roundAt, speedAt, type Item, type Round } from './config'
+import { GAME_DURATION_MS, GOAL, MAX_ITEMS, MISS_PENALTY, ROUNDS, roundAt, speedAt, type Item, type Round } from './config'
 
 // Motor de ZEEK SORT (sin DOM).
 
@@ -20,7 +20,7 @@ export interface Falling {
 
 export interface SortEvent {
   id: number
-  type: 'correct' | 'wrong' | 'round'
+  type: 'correct' | 'wrong' | 'missed' | 'round'
   x: number
   y: number
 }
@@ -113,10 +113,13 @@ export function step(s: SortState, dtMs: number) {
   let n = 0
   for (const it of s.items) {
     if (!it.dragging) it.y += it.vy * sec
-    // Llegó a los contenedores sin clasificar: desaparece sin penalización.
+    // Llegó a los contenedores sin clasificar: se pierde y resta 1 (nunca menos de 0).
     if (!it.dragging && it.y + size / 2 >= floor) {
       s.missed += 1
-      s.particles.burst(it.x, floor, ['rgba(255,255,255,0.6)'], 8, size * 1.5)
+      s.score = Math.max(0, s.score - MISS_PENALTY)
+      s.shake = Math.max(s.shake, 0.6)
+      s.particles.burst(it.x, floor, ['rgba(255,255,255,0.6)', PURPLE], 10, size * 1.5)
+      s.events.push({ id: ++s.seq, type: 'missed', x: it.x, y: floor - size / 2 })
       continue
     }
     s.items[n++] = it

@@ -54,6 +54,7 @@ export default function SortPlay({ muted, onToggleMute, play, onFinish }: PlayPr
           play('buzz')
           navigator.vibrate?.(60)
         }
+        if (ev.type === 'missed') play('buzz')
         if (ev.type === 'round') {
           play('combo')
           setBanner(ev)
@@ -109,7 +110,7 @@ export default function SortPlay({ muted, onToggleMute, play, onFinish }: PlayPr
       onToggleMute={onToggleMute}
       hud={
         <>
-          <HudStat label="Correctas" value={hud.score} goal={GOAL} accent={hud.score >= 10} />
+          <HudStat label="Puntos" value={hud.score} goal={GOAL} accent={hud.score >= GOAL - 5} />
           <HudTimer seconds={hud.seconds} />
           <span className="w-[4.5rem]" />
         </>
