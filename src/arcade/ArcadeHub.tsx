@@ -4,6 +4,7 @@ import Header from '../components/Header'
 import CardIcon from '../components/CardIcon'
 import { useFullscreen } from '../hooks/useFullscreen'
 import RocketSvg from '../rush/RocketSvg'
+import { BadTarget, GoodTarget } from '../tap/TapScreens'
 import type { GameId } from './routes'
 
 interface GameCardProps {
@@ -78,6 +79,15 @@ function RushArt() {
   )
 }
 
+function TapArt() {
+  return (
+    <div className="relative h-full w-full" aria-hidden="true">
+      <GoodTarget className="tap-float absolute top-[8%] left-[10%] h-[55%] w-[55%]" />
+      <BadTarget className="tap-float absolute right-[6%] bottom-[8%] h-[42%] w-[42%] [animation-delay:0.7s]" />
+    </div>
+  )
+}
+
 export default function ArcadeHub({ onOpen }: { onOpen: (game: GameId) => void }) {
   const fullscreen = useFullscreen()
   return (
@@ -97,7 +107,7 @@ export default function ArcadeHub({ onOpen }: { onOpen: (game: GameId) => void }
           <p className="mt-4 text-lg text-white/80">Minijuegos para builders. Elegí tu reto 👾</p>
         </div>
 
-        <div className="grid w-full max-w-md gap-4 md:max-w-2xl lg:max-w-4xl lg:grid-cols-2 lg:gap-6">
+        <div className="grid w-full max-w-md gap-4 md:max-w-2xl lg:max-w-6xl lg:grid-cols-3 lg:gap-6">
           <GameCard
             title="ZEEK IT"
             tagline="Memorama: encontrá todas las parejas antes de que se acabe el tiempo."
@@ -115,6 +125,15 @@ export default function ArcadeHub({ onOpen }: { onOpen: (game: GameId) => void }
             accent="purple"
             onPlay={() => onOpen('rush')}
             delay="220ms"
+          />
+          <GameCard
+            title="ZEEK TAP"
+            tagline="Tocá los verdes, evitá los morados: 15 puntos en 20 segundos."
+            chips={['⚡ Reflejos', '⏱️ 20 s', '🎯 Meta 15']}
+            art={<TapArt />}
+            accent="neon"
+            onPlay={() => onOpen('tap')}
+            delay="320ms"
           />
         </div>
       </main>

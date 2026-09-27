@@ -52,6 +52,13 @@ const SOUNDS = {
   ],
   beep: [{ freq: 660, duration: 0.12, type: 'square', volume: 0.06 }],
   go: [{ freq: 990, slideTo: 1480, duration: 0.25, type: 'square', volume: 0.07 }],
+  // ZEEK TAP
+  pop: [{ freq: 740, slideTo: 1180, duration: 0.07, type: 'square', volume: 0.07 }],
+  buzz: [
+    { freq: 140, duration: 0.18, type: 'sawtooth', volume: 0.08 },
+    { freq: 110, start: 0.05, duration: 0.18, type: 'square', volume: 0.05 },
+  ],
+  combo: [660, 880, 1320].map((freq, i) => ({ freq, start: i * 0.05, duration: 0.08, type: 'triangle', volume: 0.08 })),
   tick: [{ freq: 1200, duration: 0.04, type: 'sine', volume: 0.06 }],
   win: [523, 659, 784, 1047].map((freq, i) => ({ freq, start: i * 0.1, duration: 0.18 })),
   lose: [392, 330, 262].map((freq, i) => ({

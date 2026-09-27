@@ -2,10 +2,11 @@ import { useCallback, useEffect, useState } from 'react'
 import ArcadeHub from './arcade/ArcadeHub'
 import { pathFor, routeFromLocation, type Route } from './arcade/routes'
 import RushApp from './rush/RushApp'
+import TapApp from './tap/TapApp'
 import ZeekItApp from './ZeekItApp'
 
 // ZEEK ARCADE: menú de juegos. Rutas simples sin librerías:
-// /  → menú · /it → ZEEK IT · /rush → ZEEK RUSH
+// /  → menú · /it → ZEEK IT · /rush → ZEEK RUSH · /tap → ZEEK TAP
 export default function App() {
   const [route, setRoute] = useState<Route>(() => routeFromLocation())
 
@@ -28,5 +29,6 @@ export default function App() {
 
   if (route === 'it') return <ZeekItApp onExit={toHub} />
   if (route === 'rush') return <RushApp onExit={toHub} />
+  if (route === 'tap') return <TapApp onExit={toHub} />
   return <ArcadeHub onOpen={go} />
 }

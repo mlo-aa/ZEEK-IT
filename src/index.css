@@ -300,6 +300,68 @@
   100% { opacity: 0; transform: translate(-30px, 60px) scale(2.2); }
 }
 
+/* ---------- ZEEK TAP ---------- */
+.tap-popup {
+  translate: -50% -50%;
+  text-shadow: 0 3px 0 #000;
+  animation: tap-popup 750ms ease-out both;
+}
+@keyframes tap-popup {
+  0% { opacity: 0; transform: scale(0.5); }
+  20% { opacity: 1; transform: scale(1.25) translateY(-8px); }
+  100% { opacity: 0; transform: scale(1) translateY(-60px); }
+}
+.tap-bump {
+  animation: tap-bump 260ms cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+@keyframes tap-bump {
+  0% { transform: scale(1.45); }
+  100% { transform: scale(1); }
+}
+.tap-fire {
+  background-image: linear-gradient(90deg, #01e576, #b7ffd9, #01e576);
+  background-size: 200% 100%;
+  animation: tap-fire 700ms linear infinite;
+}
+@keyframes tap-fire {
+  from { background-position: 0 0; }
+  to { background-position: 200% 0; }
+}
+.tap-combo {
+  box-shadow: 5px 5px 0 var(--color-zeek);
+  animation: tap-combo 900ms cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+@keyframes tap-combo {
+  0% { opacity: 0; transform: scale(0.4) rotate(-8deg); }
+  25% { opacity: 1; transform: scale(1.1) rotate(3deg); }
+  75% { opacity: 1; transform: scale(1) rotate(0); }
+  100% { opacity: 0; transform: scale(0.9) translateY(-20px); }
+}
+.tap-bad-flash {
+  background: radial-gradient(circle, rgb(99 53 237 / 0.45), transparent 70%);
+  animation: rush-hit 350ms ease-out both;
+}
+.tap-float {
+  animation: rush-float 2.4s ease-in-out infinite;
+}
+.tap-bolt {
+  animation: tap-bolt 1.2s ease-in-out infinite;
+}
+@keyframes tap-bolt {
+  0%, 100% { transform: rotate(-8deg) scale(1); }
+  50% { transform: rotate(8deg) scale(1.15); }
+}
+.tap-ring {
+  animation: tap-ring 1.2s ease-out infinite;
+}
+@keyframes tap-ring {
+  0% { opacity: 0.9; transform: scale(0.6); }
+  100% { opacity: 0; transform: scale(1.4); }
+}
+.tap-win {
+  animation: trophy-in 800ms cubic-bezier(0.3, 1.5, 0.5, 1) both;
+}
+
 /* ---------- Animaciones generales ---------- */
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(18px); }

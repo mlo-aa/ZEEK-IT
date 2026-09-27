@@ -8,6 +8,7 @@ y juega desde el celular, sin cuentas ni instalación.
 | `/` | Menú de ZEEK ARCADE |
 | `/it` | **ZEEK IT**: memorama (ver abajo) |
 | `/rush` | **ZEEK RUSH** 🚀: arcade espacial de 30 segundos |
+| `/tap` | **ZEEK TAP** ⚡: reflejos, 15 puntos en 20 segundos |
 | `/#ranking` o `/it#ranking` | Ranking del día de ZEEK IT (pantalla del stand) |
 
 ## ZEEK RUSH
@@ -31,6 +32,26 @@ tus 3 vidas para ganar; cada estrella suma 10 puntos (opcionales).
 - **Motor:** Canvas 2D propio en TypeScript, sin librerías de juego:
   `engine.ts` (lógica pura, testeable), `render.ts` (dibujo), `RushGame.tsx`
   (bucle, controles, HUD).
+
+## ZEEK TAP
+
+Tocá los objetivos verdes (+1, con ⚡) y evitá los morados (−2, dentados con ✕).
+Llegá a 15 puntos en 20 segundos; al alcanzarlos se gana en el acto. El puntaje
+nunca baja de 0 y los objetivos que se escapan no restan.
+
+- **Progresión:** 1–7 s objetivos grandes y de a uno (solo verdes); 8–14 s más
+  chicos, hasta 2 a la vez y aparecen morados; 15–20 s hasta 3, verdes y morados
+  alternados. Todo en `src/tap/config.ts`.
+- **Toques precisos:** objetivos de al menos 60 px, área táctil un 15 % más
+  grande que el dibujo, lejos de los bordes y sin superponerse (también mientras
+  se mueven). Cada toque activa como máximo un objetivo.
+- **Dificultad medida:** los tests simulan jugadores con distinto tiempo de
+  reacción (con variación y errores): con buenos reflejos (~550 ms) se gana casi
+  siempre, con ~750 ms a veces y con ~850 ms rara vez.
+- **Feedback:** partículas al acertar, "+1 / −2", sacudida y destello morado al
+  errar (y vibración en Android), racha con "¡Combo xN!".
+- Cuenta regresiva 3-2-1, pausa automática al cambiar de pestaña, sonido apagado
+  por defecto.
 
 ## ZEEK IT
 
